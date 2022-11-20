@@ -1,6 +1,6 @@
 import { Text, View, Image, StyleSheet } from 'react-native';
 
-export default function JobCard(props) {
+export default function DoctorCard(props) {
   return(
     <View style={style.customCard}>
       <View style={style.imageCardContainer}>
