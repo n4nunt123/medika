@@ -1,6 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableHighlight, View, Pressable, Alert } from 'react-native'
 import { useEffect, useState } from 'react'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
+import { Picker } from '@react-native-picker/picker'
 import axios from 'axios'
 
 export default function RegisterScreen({ navigation }) {
@@ -18,6 +19,7 @@ export default function RegisterScreen({ navigation }) {
       if(!email) throw { message: 'Please input your email' }
       if(!password) throw { message: 'Please input your password' }
       if(!age) throw { message: 'Please input your age' }
+      if(!Number(age)) throw { message: 'Invalid age input' }
       if(!gender) throw { message: 'Please choose your gender' }
       if(!phoneNumber) throw { message: 'Please input your phone number' }
       if(!Number(phoneNumber)) throw { message: 'Invalid phone number input' }
@@ -40,7 +42,6 @@ export default function RegisterScreen({ navigation }) {
       await loginData({ id: data.id, access_token: data.access_token })
       navigation.navigate({ name: 'Front' })
     } catch (err) {
-      console.log(err)
       Alert.alert("Opps!", err.message)
     }
   }
@@ -83,12 +84,14 @@ export default function RegisterScreen({ navigation }) {
           value = { age }
           placeholder = 'Input your age here...'
         />
-        <TextInput 
+        <Picker
+          selectedValue={ gender }
           style={ style.input }
-          onChangeText = { setGender }
-          value = { gender }
-          placeholder = 'Input your gender here...'
-        />
+          onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+        >
+          <Picker.Item label="Laki - laki" value="L" />
+          <Picker.Item label="Perempuan" value="P" />
+        </Picker>
         <TextInput 
           style={ style.input }
           onChangeText = { setAddress }
@@ -129,7 +132,6 @@ const style = StyleSheet.create({
     margin: 12,
     padding: 10,
     backgroundColor: "white",
-    borderRadius: 30,
     width: '90%',
   },
   submit: {

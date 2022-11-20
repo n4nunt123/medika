@@ -1,23 +1,23 @@
 import { Text, View, Image, StyleSheet } from 'react-native';
-
+import { useEffect, useState } from 'react'
+ 
 export default function ScheduleCard(props) {
   return(
     <View style={style.customCard}>
-      <View style={style.imageCardContainer}>
-        <Image 
-          source={{ uri: props.doctor.profilPic }}
-          style={style.imageCard}
-        />
-      </View>
       <View style={style.contentCard}>
         <View style={style.titleCard}>
-          <Text style={style.titleTextCard}>Dr. {props.doctor.fullName}</Text>
+          <Text style={style.titleTextCard}>Dr. {props.schedule.doctor}</Text>
+          <Text style={style.titleTextCard}>Spesialis: {props.schedule.doctorSpecialist}</Text>
         </View>
         <View style={style.descriptionCard}>
-          <Text>Spesialisasi Dokter: {props.doctor.specialist}</Text>
+          <Text>Nama Pasien: {props.schedule.fullName}</Text>
+          <Text>Umur Pasien: {props.schedule.age}</Text>
+          <Text>Jenis Kelamin Pasien: {props.schedule.gender}</Text>
         </View>
-        <Text></Text>
-        <Text>Jadwal Praktek: {props.doctor.scheduleStart} - {props.doctor.scheduleEnd}</Text>
+        <View style={{ marginTop: 10 }}>
+          <Text>Hari Praktek: {props.schedule.day}</Text>
+          <Text>Jam Praktek: {props.schedule.doctorScheduleStart} - {props.schedule.doctorScheduleEnd}</Text>
+        </View>
       </View>
     </View>
   )
@@ -51,7 +51,7 @@ const style = StyleSheet.create({
     width:210
   },
   titleCard: {
-    marginTop: 10,
+    marginTop: 2,
     marginBottom: 4,
     paddingBottom: 2,
     borderBottomColor: '#d2706d',
@@ -63,6 +63,7 @@ const style = StyleSheet.create({
     color: '#d2706d',
   },
   descriptionCard: {
+    marginTop: 5,
     marginBottom: 3,
   }
 })

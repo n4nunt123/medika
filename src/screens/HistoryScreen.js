@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Text, View, Alert, StyleSheet, Image, Button } from 'react-native'
+import { Text, View, Alert, StyleSheet, Image, Button, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import axios from 'axios'
 import ScheduleCard from '../components/scheduleCard'
@@ -7,16 +7,15 @@ import AsyncStorage  from '@react-native-async-storage/async-storage'
 
 
 export default function HistoryScreen({ navigation }) {
-  const [dataUserSchedule, setUserSchedule] = useState([])
+  const [userSchedule, setUserSchedule] = useState([])
   const [dataUser, setDataUser] = useState({})
 
-  const getDataDoctors = async () => {
+  const getScheduleUser = async () => {
     try {
-      const jsonValue = JSON.parse(await AsyncStorage.getItem("@storage_key"))
+      const { id } = JSON.parse(await AsyncStorage.getItem("@storage_key"))
       const { data } = await axios({
-        url: 'http://192.168.1.8:4001/schedule-users/user',
-        method: 'GET',
-        data: { id: jsonValue }
+        url: `http://192.168.1.8:4001/schedule-users/user/${id}`,
+        method: 'GET'
       })
       setUserSchedule(data)
     } catch (err) {
@@ -38,10 +37,9 @@ export default function HistoryScreen({ navigation }) {
   }
 
   useEffect(() => {
-    getDataDoctors()
+    getScheduleUser()
     getDataUser()
-    console.log(dataUserSchedule)
-  }, [])
+  }, [userSchedule])
 
   return (
     <SafeAreaView style={style.container}>
@@ -68,13 +66,15 @@ export default function HistoryScreen({ navigation }) {
       <View style={{ flex: 3, alignItems: 'center', marginTop: '8%'  }}>
         <View style={{ marginBottom: 20 }}>
           <Button 
-            title='Daftar Kunjungan Bru'
-            color='blue'
-            onPress={() => navigation.navigate('Login')}
+            title='Daftar Kunjungan Baru'
+            color='#d2706d'
+            onPress={() => navigation.navigate('Reservation')}
           />
         </View>
         <Text style={style.homeText}>Daftar Riwayat Kunjungan</Text>
-        { dataUserSchedule.length !== 0 ? dataUserSchedule.map(el => <ScheduleCard doctor={el} key={el.id} />) : <Text>Hello {dataUser.fullName}. Kamu belum memiliki history kunjungan</Text> }
+        <ScrollView>
+          { userSchedule.length !== 0 ? userSchedule.map(el => <ScheduleCard schedule={el} key={el.id} />) : <Text>Hello {dataUser.fullName}. Kamu belum memiliki history kunjungan</Text> }
+        </ScrollView>
       </View>
     </SafeAreaView>
   )
